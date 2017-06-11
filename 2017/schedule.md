@@ -4,7 +4,7 @@ Mon, June 5
 
 | Time | Activity | Instructor |
 | ---- | -------- | ---------- |
-| 9:00-10:15  |  Lecture 1.1: Introduction to the course & quantitative genetics  |   FHL, Steve Arnold, Joe Felsenstein|
+| 9:00-10:15  |  Lecture 1.1: Introduction to the course & quantitative genetics  |   FHL, Steve Arnold, Joe Felsenstein |
 | 10:15-10:45  |  Discussion  |  |
 | 10:45-11:45  |  Lecture 1.2: Inheritance of a single trait & response to selection  |  Steve Arnold|
 | 11:45-12:15  |  Discussion  |  |
@@ -15,7 +15,7 @@ Mon, June 5
 | 3:30-3:45  |  Discussion  |  |
 | 3:30-4:30  |  Exercise 1.2: Estimating & comparing G-matrices with PCP software  |   Steve Arnold |
 | 4:30 – 5:00  |   Discussion  |  |
-| 5:00 |  | (optional) Rowboat orientation (at Pier)  |  |
+| 5:00 |  (optional) Rowboat orientation (at Pier)  |  |
 
 Tues, June 6
 
