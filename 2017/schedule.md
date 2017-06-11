@@ -11,7 +11,7 @@ Mon, June 5
 | 12:15-1:15  |  Lunch  |  |
 | 1:00-1:15  |  Individual photos (at rock in front of main office building)  |  |
 | 1:15-2:30  |  Exercise 1.1: Estimation of heritability:  Parent-offspring regression in R:  |  Steve Arnold |
-| 2:30-3:30 |  | Lecture 1.3: Multivariate inheritance & response to selection  |   Steve Arnold |
+| 2:30-3:30 | Lecture 1.3: Multivariate inheritance & response to selection  |   Steve Arnold |
 | 3:30-3:45  |  Discussion  |  |
 | 3:30-4:30  |  Exercise 1.2: Estimating & comparing G-matrices with PCP software  |   Steve Arnold |
 | 4:30 – 5:00  |   Discussion  |  |
@@ -88,4 +88,4 @@ Fri, June 9
 | 3:00-3:30 | Exercise 5.2: Threshold methods |  Josef Uyeda |
 | 3:30-3:45 | Discussion |  |
 |  3:45-4:45 | Overview of course discussion |  All |
-| 4:45-5:15 | Workshop feedback |  | 
+| 4:45-5:15 | Workshop feedback |  |
