@@ -57,7 +57,7 @@ Thur, June 8
 | ---- | -------- | ---------- |
 | 9:00-9:45 | Lecture/Exercise 4.1: Univariate OU, a bottom-up perspective | Marguerite Butler |
 | 9:45-10:00 | Discussion |  |
-| 10:00-10:30 | Lecture/Exercise 4.2: Univariate OU, a top-down perspective |  Brian O’Meara |
+| 10:00-10:30 | [Lecture/Exercise 4.2: Univariate OU, a top-down perspective](Lecture4_2/index.md) |  Brian O’Meara |
 | 10:30-10:45 | Discussion |  |
 | 10:45-11:45 | Lecture 4.3: Accounting for sexual radiation with coevolutionary models & OUwie | Steve Arnold |
 | 11:45-12:00 | Discussion |  |
