@@ -20,7 +20,7 @@ for (i in 1:nsteps)     # Put into a for loop to traverse the history
 {
 	x[i+1] <- x[i] + devs[i]
 }
-# Plot of phenotypic value of one lineage through time
+# Plot of stochastic deviations for one lineage through time
 plot(1:length(devs), devs, type = "l", col="red", ylim = c(-max(devs)*30, max(devs)*30), xlab="Time", ylab="Value", main="BM Simulation")
 
 ### Now make a nice simulation by ploting each evolutionary change 
