@@ -1,5 +1,5 @@
 #Here is a basic exercise for OUwie, along with more advanced topics
-#Brian O'Meara, Aug 12, 2015
+#Brian O'Meara, June 12, 2019
 require('OUwie')
 
 ?OUwie #gives help on OUwie
@@ -76,7 +76,7 @@ print(nodeBased.OUMV)
 
 #Now let's go over all the models. What does BMS mean?
 
-#This is an easier way to write what you were doing. A faster way to analyze it would be to use mclapply rather than lapply (see the parallels package)
+#This is an easier way to write what you were doing. A faster way to analyze it would be to use mclapply rather than lapply (see the parallel package)
 OUwie.model<-function(model, phy, data) {
 	print(paste("Now starting model",model))
 	return(OUwie(phy, data, model, simmap.tree=FALSE, diagn=FALSE))	
