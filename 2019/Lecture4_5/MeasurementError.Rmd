@@ -1,0 +1,126 @@
+---
+title: "MeasurementError"
+author: "Brian C. O’Meara"
+date: "6/13/2019"
+output:
+  html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+library(OUwie)
+library(plyr)
+library(parallel)
+library(knitr)
+library(ggplot2)
+```
+
+## Measurement error
+
+Let's do some investigations to see how measurement error could matter.
+
+First set up the model parameters
+
+```{r parameters, include=TRUE, echo=TRUE}
+data(sim.ex, package="OUwie")
+alpha=rep(2,2)
+sigma.sq=rep(.45, 2)
+theta0=10
+theta=rep(10,2)
+```
+
+Next, make up the data
+
+```{r simdata, include=TRUE, echo=TRUE}
+sim.data<-OUwie::OUwie.sim(tree, trait, simmap.tree=FALSE,
+  scaleHeight=FALSE, alpha=alpha, sigma.sq=sigma.sq,
+  theta0=theta0, theta=theta)
+sim.data$mserr <- 0 #add a measurement error column
+```
+
+Look to see if it's ok. We could just `print()` it, but `knitr::kable()` makes it prettier.
+
+```{r datacheck, include=TRUE, echo=TRUE}
+knitr::kable(sim.data)
+```
+
+Now, let's think about a range of combinations we could try.
+
+```{r combos, include=TRUE, echo=TRUE}
+mserr.vector <- seq(from=0, to=.25*max(sim.data$X), length.out=10)
+models.vector <- c("BM1", "OU1")
+mserr.argument.vector <- c("none", "known")
+all.analysis.combinations <- expand.grid(model=models.vector, mserr = mserr.argument.vector, stringsAsFactors = FALSE)
+knitr::kable(all.analysis.combinations)
+```
+
+We're going to make some functions to make running this all easier. But you won't see this in the final rendered document.
+
+```{r functions, include=FALSE, echo=FALSE}
+
+#' Do a single OUwie run for a model and summarize the results
+#' @param model Model name, as for OUwie
+#' @param mserr "known" or "none" as for OUwie
+#' @param new.data OUwie-formatted data.frame
+#' @param phy Phylo object with node labels
+#' @return Data.frame summarizing this run
+ouwie.single.run <- function(model, mserr, new.data, phy) {
+  result <- OUwie(phy, new.data, model=model, mserr=mserr)
+  result.df <- data.frame(mserr=mserr, alpha=result$solution['alpha',1], sigma.sq=result$solution['sigma.sq',1], theta=result$theta[1,1] , AICc=result$AICc, model=model, stringsAsFactors = FALSE)
+  return(result.df)
+}
+
+#' Compute everything for a given mserr.value. Note we use the same dataset for each combo
+#' @param mserr.value The value of measurement error
+#' @param all.combos The data.frame of all analysis combinations
+#' @param new.data The simulated data
+#' @param phy Phylo object with node labels
+#' @return A data.frame of results for each element in the combinations
+compute.w.error <- function(mserr.value, all.combos = all.analysis.combinations, new.data = sim.data, phy=tree) {
+  new.data$X <- rnorm(length(new.data$X), mean=new.data$X, sd=mserr.value)
+  new.data$mserr <- mserr.value
+  all.result.df <- data.frame()
+  for (i in sequence(nrow(all.combos))) {
+    # Note that this is slow: it has to keep adding to the object in memory. Look at plyr or dplyr for faster ways to do this
+    all.result.df <- rbind(all.result.df, ouwie.single.run(model=all.combos$model[i], mserr=all.combos$mserr[i],  new.data=new.data, phy=phy))
+  }
+  rownames(all.result.df)<-NULL
+  all.result.df$mserr.value = mserr.value
+  all.result.df$delta.AICc = NA
+  all.result.df$delta.AICc[which(all.result.df$mserr=="none")] <- all.result.df$AICc[which(all.result.df$mserr=="none")] - min(all.result.df$AICc[which(all.result.df$mserr=="none")])
+  all.result.df$delta.AICc[which(all.result.df$mserr=="known")] <- all.result.df$AICc[which(all.result.df$mserr=="known")] - min(all.result.df$AICc[which(all.result.df$mserr=="known")]) # note the danger here: what if I'd forgotten to change a none to a known? A two element loop would probably be safer
+  return(all.result.df)
+}
+```
+
+Now, we do a bunch of runs.
+
+
+```{r do_the_analysis, include=TRUE, echo=TRUE}
+all.results <- plyr::rbind.fill(parallel::mclapply(mserr.vector, 
+compute.w.error, all.combos = all.analysis.combinations, new.data = sim.data, phy=tree))
+
+all.results$mserr.fraction <- all.results$mserr.value / max(sim.data$X)
+all.results$model_type <- paste(all.results$model, all.results$mserr, sep="_")
+```
+
+## Plot the results
+
+### AIC 
+
+```{r plot1, include=TRUE, echo=FALSE}
+ggplot2::ggplot(data=all.results, aes(x=mserr.value, y=delta.AICc, colour=model_type)) + ggplot2::geom_line(alpha=0.9) + ggplot2::scale_color_viridis_d(end=0.8)
+```
+
+## Sigma-squared
+
+```{r sigmaplot, include=TRUE, echo=FALSE}
+ggplot2::ggplot(data=all.results, aes(x=mserr.value, y=sigma.sq, colour=model_type)) + ggplot2::geom_line() + ggplot2::scale_color_viridis_d(end=0.8) + ggplot2::scale_y_log10() + ggplot2::geom_hline(yintercept=sigma.sq[1], linetype="dotted", color="black")
+```
+
+## Alpha
+
+```{r alphaplot, include=TRUE, echo=FALSE}
+alpha_data <- subset(all.results, model=="OU1")
+ggplot2::ggplot(data=alpha_data, aes(x=mserr.value, y=alpha, colour=model_type)) + ggplot2::geom_line(alpha=0.5) + ggplot2::scale_color_viridis_d(end=0.8)
+```
